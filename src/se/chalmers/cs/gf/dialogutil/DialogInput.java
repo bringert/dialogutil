@@ -6,7 +6,7 @@ import javax.swing.*;
 import javax.swing.event.*;
 
 /**
- *  Gets text input from a Swing dialog.
+ *  Gets text input from a Swing dialog box.
  */
 public class DialogInput extends JDialog implements TextInput {
         
@@ -27,6 +27,9 @@ public class DialogInput extends JDialog implements TextInput {
                 JButton doneButton = new JButton("Done");
                 doneButton.addActionListener(new DoneListener());
                 add(doneButton, BorderLayout.SOUTH);
+
+                getRootPane().setDefaultButton(doneButton);
+
                 pack();
                 setVisible(true);
         }

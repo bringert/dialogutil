@@ -85,11 +85,14 @@ public class JavaSpeechOutput implements TextListener {
                         }
                         
                         if (voice == null)
-                                throw new RuntimeException("Synthesizer does not have a voice named "
-                                                           + voiceName + ".");
+                                throw new RuntimeException(
+                                        "Synthesizer does not have a voice named "
+                                        + voiceName + ".");
                         
                         System.err.println("JavaSpeechOutput: Setting voice " + voiceName);
                         synthesizer.getSynthesizerProperties().setVoice(voice);
+
+                        System.err.println("JavaSpeechOutput: loaded");
 
                 } catch (SpeechException ex) {
                         throw new RuntimeException(ex);
