@@ -4,6 +4,9 @@ import com.sri.oaa2.com.*;
 import com.sri.oaa2.icl.*;
 import com.sri.oaa2.lib.*;
 
+import se.chalmers.cs.gf.dialogutil.IclUtil;
+import static se.chalmers.cs.gf.dialogutil.IclUtil.icl;
+
 import java.io.IOException;
 import java.util.*;
 
@@ -40,10 +43,10 @@ public class Recognizer {
 
                 IclList answers;
                 while ((answers = simpleSolve(getEventGoal)) != null) {
-                        for (IclTerm ans : toList(answers)) {
+                        for (IclTerm ans : IclUtil.toList(answers)) {
 //                                System.err.println("Got event: " + ans);
 
-                                IclList result = (IclList)matchAndGetVar(ans, wanted, "Result");
+                                IclList result = (IclList)IclUtil.matchAndGetVar(ans, wanted, "Result");
                                 if (result != null) {
 //                                        System.err.println("Result: " + result);
 
@@ -67,49 +70,23 @@ public class Recognizer {
                 return answers;
         }
 
-        private static IclTerm matchAndGetVar(IclTerm t1, IclTerm t2, String var) {
-                HashMap<String,IclTerm> vars = new HashMap<String,IclTerm>();
-                if (Unifier.getInstance().matchTerms(t1, t2, vars))
-                        return vars.get(var);
-                return null;
-        }
-
-        private static IclTerm matchInListAndGetVar(IclTerm t, IclList l, String var) {
-                HashMap<String,IclTerm> vars = new HashMap<String,IclTerm>();
-                for (IclTerm m : toList(l)) {
-                        if (Unifier.getInstance().matchTerms(m, t, vars))
-                                return vars.get(var);
-                        vars.clear();
-                }
-                return null;
-        }
-
-        private static IclTerm firstMatch(IclTerm t, IclList l) {
-                for (IclTerm m : toList(l)) {
-                        IclTerm r = Unifier.getInstance().unify(m,t);
-                        if (r != null)
-                                return r;
-                }
-                return null;
-        }
-
         private static Result handleResult(IclList result) {
-                IclTerm recogTerm = firstMatch(icl("type('RECOGNITION')"), result);
+                IclTerm recogTerm = IclUtil.firstMatch(icl("type('RECOGNITION')"), result);
                 if (recogTerm == null)
                         return null;
-                IclList r = (IclList)matchInListAndGetVar(icl("results([Result])"), result, "Result");
+                IclList r = (IclList)IclUtil.matchInListAndGetVar(icl("results([Result])"), result, "Result");
                 if (r == null) {
                         System.err.println("No single result in " + result);
                         return null;
                 }                
 
-                IclStr textTerm = (IclStr)matchInListAndGetVar(icl("text(Text)"), r, "Text");
+                IclStr textTerm = (IclStr)IclUtil.matchInListAndGetVar(icl("text(Text)"), r, "Text");
                 if (textTerm == null) {
                         System.err.println("No text in " + r);
                         return null;
                 }
 
-                IclInt confTerm = (IclInt)matchInListAndGetVar(icl("confidence(Conf)"), r, "Conf");
+                IclInt confTerm = (IclInt)IclUtil.matchInListAndGetVar(icl("confidence(Conf)"), r, "Conf");
                 if (confTerm == null) {
                         System.err.println("No confidence in " + r);
                         return null;
@@ -121,24 +98,8 @@ public class Recognizer {
                 return new Result(text, conf);
         }
 
-        private static IclTerm icl(String s) {
-                try {
-                        return IclTerm.fromString(s);
-                } catch (Exception ex) {
-                        throw new RuntimeException(ex);
-                }
-        }
-
-        private static List<IclTerm> toList(IclList l) {
-                int n = l.getNumChildren();
-                List<IclTerm> r = new ArrayList<IclTerm>(n);
-                for (int i = 0; i < n; i++)
-                        r.add(l.getTerm(i));
-                return r;
-        }
-
         /**
-         *  The result of the text to speech recognizer.
+         *  The result of the speech recognizer.
          */
         public static class Result {
                 private String text;
