@@ -32,14 +32,13 @@ public class OAAClient {
          *
          *  @param goal The task
          *  @param params Parameters
-         *  @return A non-empty list of solutions, or null if there were
-         *   no solutions.
+         *  @return A possibly empty list of solutions.
          */
         public List<IclTerm> solve(IclTerm goal, List<IclTerm> params) {
                 IclList answers = new IclList();
 
                 if (!outOaa.oaaSolve(goal, IclUtil.fromList(params), answers))
-                        return null;
+                        return Collections.<IclTerm>emptyList();
 
                 return IclUtil.toList(answers);
         }
