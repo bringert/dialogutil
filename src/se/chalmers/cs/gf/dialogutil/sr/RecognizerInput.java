@@ -13,41 +13,51 @@ public class RecognizerInput implements TextInput {
 
         private boolean enabled = true;
 
-        public RecognizerInput(String agentName, String[] libcomargs) {
-                new RecogThread(agentName, libcomargs). start();
+        public RecognizerInput(Recognizer recog) {
+                new RecogThread(recog).start();
         }
         
-        private class RecogThread extends Thread {
-                private String agentName;
-                private String[] libcomargs;
+        /**
+         *  Connect to the OAA facilitator and start the recognizer 
+         *  asynchronously.
+         */
+        public RecognizerInput(final String agentName, final String[] libcomargs) {
+                new Thread() {
+                        public void run() {
+                                try {
+                                        OAAClient client = new OAAClient(agentName, libcomargs);
+                                        Recognizer recog = new Recognizer(client);
+                                        new RecogThread(recog).start();
+                                } catch (IOException ex) {
+                                        System.err.println("Recognizer input: " + ex);
+                                }
+                        }
+                }.start();
+        }
 
-                private RecogThread(String agentName, String[] libcomargs) {
-                        this.agentName = agentName;
-                        this.libcomargs = libcomargs;
+        private class RecogThread extends Thread {
+                private Recognizer recog;
+
+                private RecogThread(Recognizer recog) {
+                        this.recog = recog;
                 }
 
                 public void run() {
-                        try {
-                                Recognizer recog = new Recognizer(agentName, libcomargs);
-                                
-                                while (true) {
+                        while (true) {
                                         
-                                        synchronized (RecognizerInput.this) {
-                                                while (!enabled)
-                                                        try {
-                                                                RecognizerInput.this.wait();
-                                                        } catch (InterruptedException ex) {}
-                                        }
+                                synchronized (RecognizerInput.this) {
+                                        while (!enabled)
+                                                try {
+                                                        RecognizerInput.this.wait();
+                                                } catch (InterruptedException ex) {}
+                                }
                                         
 
-                                        Recognizer.Result r = recog.recognize(".MAIN");
-                                        if (r != null) {
-                                                final String text = r.getText();
-                                                fireTextEvent(text);
-                                        }
+                                Recognizer.Result r = recog.recognize(".MAIN");
+                                if (r != null) {
+                                        final String text = r.getText();
+                                        fireTextEvent(text);
                                 }
-                        } catch (IOException ex) {
-                                System.err.println("RecognizerInput: Error: " + ex);
                         }
                 }
         }

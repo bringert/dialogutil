@@ -14,17 +14,19 @@ import java.util.*;
 /**
  *  Calls the Nuance speech recognizer using OAA.
  */
-public class Recognizer extends OAAClient {
+public class Recognizer {
 
-        public Recognizer(String agentName, String[] libcomargs) throws IOException {
-                super(agentName, libcomargs);
+        private OAAClient client;
+
+        public Recognizer(OAAClient client) {
+                this.client = client;
         }
 
         public Result recognize(String cat) {
                 IclTerm context = new IclStr(cat);
                 IclTerm goal = new IclStruct("nscPlayAndRecognize", context);
 
-                if (solve(goal) == null) {
+                if (client.solve(goal) == null) {
                         System.err.println(goal + " failed");
                         return null;
                 }
@@ -33,7 +35,7 @@ public class Recognizer extends OAAClient {
                 IclTerm wanted = icl("nscGetEvent(recResult(Result))");
 
                 List<IclTerm> answers;
-                while ((answers = solve(getEventGoal)) != null) {
+                while ((answers = client.solve(getEventGoal)) != null) {
                         for (IclTerm ans : answers) {
 //                                System.err.println("Got event: " + ans);
 
@@ -51,6 +53,26 @@ public class Recognizer extends OAAClient {
                 return null;
         }
 
+
+// Example result:
+/*
+                [dtype(17),
+                 type('RECOGNITION'),
+                 results([[dtype(10),
+                           text('six seven eight nine'),
+                           probability(-4647),
+                           confidence(60),
+                           confidenceWithoutFiller(60),
+                           wordConfidences([63,55,54,69]),
+                           interp([[dtype(9),probability(0),slotValue([]),slotInfo([])]])
+                         ]]
+                        ),
+                 textRecresult(''),
+                 numFrames(161),
+                 firstPassRecognizerInfo(''),
+                 secondPassRecognizerInfo('')
+                ]
+*/
         private static Result handleResult(IclList result) {
                 IclTerm recogTerm = IclUtil.firstMatch(icl("type('RECOGNITION')"), result);
                 if (recogTerm == null)
@@ -106,13 +128,8 @@ public class Recognizer extends OAAClient {
 
 
         public static void main(String[] args) throws IOException {
-
-/*
-                IclList result = (IclList)icl("[dtype(17),type('RECOGNITION'),results([[dtype(10),text('six seven eight nine'),probability(-4647),confidence(60),confidenceWithoutFiller(60),wordConfidences([63,55,54,69]),interp([[dtype(9),probability(0),slotValue([]),slotInfo([])]])]]),textRecresult(''),numFrames(161),firstPassRecognizerInfo(''),secondPassRecognizerInfo('')]");
-                System.err.println(handleResult(result));
-*/
-
-                Recognizer r = new Recognizer("recognizer", args);
+                OAAClient client = new OAAClient("recognizer", args);
+                Recognizer r = new Recognizer(client);
 
                 while (true) {
                         System.err.println(r.recognize(".MAIN"));
