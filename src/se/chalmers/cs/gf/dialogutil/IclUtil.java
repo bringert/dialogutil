@@ -76,4 +76,11 @@ public class IclUtil {
                 return r;
         }
 
+        /**
+         *  Convert a list of IclTerms to an IclList.
+         */
+        public static IclList fromList(List<IclTerm> l) {
+                return new IclList(l);
+        }
+
 }

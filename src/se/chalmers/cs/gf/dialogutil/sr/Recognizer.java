@@ -6,6 +6,7 @@ import com.sri.oaa2.lib.*;
 
 import se.chalmers.cs.gf.dialogutil.IclUtil;
 import static se.chalmers.cs.gf.dialogutil.IclUtil.icl;
+import se.chalmers.cs.gf.dialogutil.OAAClient;
 
 import java.io.IOException;
 import java.util.*;
@@ -13,27 +14,17 @@ import java.util.*;
 /**
  *  Calls the Nuance speech recognizer using OAA.
  */
-public class Recognizer {
-
-        private LibOaa outOaa;
+public class Recognizer extends OAAClient {
 
         public Recognizer(String agentName, String[] libcomargs) throws IOException {
-                outOaa = new LibOaa(new LibCom(new LibComTcpProtocol(),libcomargs));
-
-                if (!outOaa.oaaSetupCommunication(agentName))
-                        throw new IOException("Couldnt connect to facilitator");
-
-                if (!outOaa.oaaRegister("parent", agentName, new IclList(), new IclList()))
-                        throw new IOException("Could not register");
-
-                outOaa.oaaReady(true);
+                super(agentName, libcomargs);
         }
 
         public Result recognize(String cat) {
                 IclTerm context = new IclStr(cat);
                 IclTerm goal = new IclStruct("nscPlayAndRecognize", context);
 
-                if (simpleSolve(goal) == null) {
+                if (solve(goal) == null) {
                         System.err.println(goal + " failed");
                         return null;
                 }
@@ -41,9 +32,9 @@ public class Recognizer {
                 IclTerm getEventGoal = icl("nscGetEvent(Event)");
                 IclTerm wanted = icl("nscGetEvent(recResult(Result))");
 
-                IclList answers;
-                while ((answers = simpleSolve(getEventGoal)) != null) {
-                        for (IclTerm ans : IclUtil.toList(answers)) {
+                List<IclTerm> answers;
+                while ((answers = solve(getEventGoal)) != null) {
+                        for (IclTerm ans : answers) {
 //                                System.err.println("Got event: " + ans);
 
                                 IclList result = (IclList)IclUtil.matchAndGetVar(ans, wanted, "Result");
@@ -58,16 +49,6 @@ public class Recognizer {
                 }
 
                 return null;
-        }
-
-        private IclList simpleSolve(IclTerm goal) {
-                IclList params = new IclList(); 
-                IclList answers = new IclList();
-
-                if (!outOaa.oaaSolve(goal, params, answers))
-                        return null;
-
-                return answers;
         }
 
         private static Result handleResult(IclList result) {
