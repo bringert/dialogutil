@@ -3,7 +3,18 @@ Some utilities for building dialog systems with Java and OAA.
 Requirements:
 
 - Java SDK 1.5.0 (http://java.sun.com/j2se/1.5.0/download.jsp)
-- OOA 2.3.0 (http://www.ai.sri.com/oaa/distribution/v2.3/)
+
+- OOA 2.3.0 (http://www.ai.sri.com/oaa/distribution/v2.3/) The
+  environment variable OAA_HOME should point to the base of the OAA
+  installation.
+
+- Java Speech API classes
+
+- A Java Speech API Engine
+
+Configure:
+
+- Edit the paths in the Makefile to suit your installation.
 
 Compile:
 

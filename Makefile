@@ -17,17 +17,19 @@ JAR   = jar
 # path to the javadoc tool
 JAVADOC = javadoc
 
-# path to a OAA installation
-OAA_HOME = ../oaa2.3.0
-
 # the host where the OAA facilitator is running
 FAC_HOST = $(HOSTNAME)
 
+# path to the base of a FreeTTS install 
+# (only used to define JSAPI_CP and
+# JSAPI_ENGINE_CP)
+FREETTS=../freetts-1.2
+
 # path to Java Speech API classes
-JSAPI_CP=../freetts-1.2beta2/lib/jsapi.jar
+JSAPI_CP=$(FREETTS)/lib/jsapi.jar
 
 # path to Java Speech Engine classes
-JSAPI_ENGINE_CP=../freetts-1.2beta2/lib/freetts.jar
+JSAPI_ENGINE_CP=$(FREETTS)/lib/freetts.jar
 
 ###################################################
 ###################################################
