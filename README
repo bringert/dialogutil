@@ -2,6 +2,7 @@ Some utilities for building dialog systems with Java and OAA.
 
 Requirements:
 
+- Java SDK 1.5.0 (http://java.sun.com/j2se/1.5.0/download.jsp)
 - OOA 2.3.0 (http://www.ai.sri.com/oaa/distribution/v2.3/)
 
 Compile:
