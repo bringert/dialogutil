@@ -26,8 +26,8 @@ public class Recognizer {
                 IclTerm context = new IclStr(cat);
                 IclTerm goal = new IclStruct("nscPlayAndRecognize", context);
 
-                if (client.solve(goal) == null) {
-                        System.err.println(goal + " failed");
+                if (client.solve(goal).isEmpty()) {
+                        System.err.println("Recognizer: " + goal + " failed");
                         return null;
                 }
 
@@ -35,7 +35,7 @@ public class Recognizer {
                 IclTerm wanted = icl("nscGetEvent(recResult(Result))");
 
                 List<IclTerm> answers;
-                while ((answers = client.solve(getEventGoal)) != null) {
+                while (!((answers = client.solve(getEventGoal)).isEmpty())) {
                         for (IclTerm ans : answers) {
 //                                System.err.println("Got event: " + ans);
 
