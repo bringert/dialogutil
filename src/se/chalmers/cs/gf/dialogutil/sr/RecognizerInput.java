@@ -5,6 +5,9 @@ import se.chalmers.cs.gf.dialogutil.*;
 import javax.swing.SwingUtilities;
 import javax.swing.event.EventListenerList;
 
+/**
+ *  A text input source which gets input from a Recognizer.
+ */
 public class RecognizerInput implements TextInput {
 
         protected EventListenerList listenerList = new EventListenerList();

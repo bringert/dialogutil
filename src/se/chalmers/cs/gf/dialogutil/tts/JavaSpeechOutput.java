@@ -4,7 +4,11 @@ package se.chalmers.cs.gf.dialogutil.tts;
  * Copyright 2004 Bjorn Bringert.
  *
  * Do Text-To-Speech using the Java Speech API.
- * Based on code from the FreeTTS HelloWorld program, which is:
+ * Based on code from the FreeTTS HelloWorld program, which 
+ * bears the following header:
+ */
+
+/*
  * Copyright 2003 Sun Microsystems, Inc.
  * 
  * See the file "license.terms" for information on usage and
@@ -23,6 +27,9 @@ import javax.speech.synthesis.Voice;
 
 import se.chalmers.cs.gf.dialogutil.*;
 
+/**
+ *  Outputs text to FreeTTS using the Java Speech API.
+ */
 public class JavaSpeechOutput implements TextListener {
 
         private Synthesizer synthesizer;

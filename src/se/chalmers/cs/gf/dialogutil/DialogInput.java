@@ -5,12 +5,18 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
+/**
+ *  Gets text input from a Swing dialog.
+ */
 public class DialogInput extends JDialog implements TextInput {
         
         protected EventListenerList listenerList = new EventListenerList();
 
         private JTextField inputField;
 
+        /**
+         *  Creates and shows the dialog.
+         */
         public DialogInput() {
                 setTitle("Enter query");
 

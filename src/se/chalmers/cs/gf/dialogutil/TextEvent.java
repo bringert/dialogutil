@@ -2,6 +2,9 @@ package se.chalmers.cs.gf.dialogutil;
 
 import java.util.EventObject;
 
+/**
+ *  Represents a text input event.
+ */
 public class TextEvent extends EventObject {
 
         private String text;

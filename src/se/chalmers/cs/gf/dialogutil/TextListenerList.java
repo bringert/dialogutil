@@ -3,6 +3,9 @@ package se.chalmers.cs.gf.dialogutil;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *  A list of TextListener objects.
+ */
 public class TextListenerList {
 
         private List<TextListener> listeners;

@@ -14,6 +14,9 @@ JAVA  = java
 # path to the Java archive tool
 JAR   = jar
 
+# path to the javadoc tool
+JAVADOC = javadoc
+
 # path to a OAA installation
 OAA_HOME = ../oaa2.3.0
 
@@ -40,7 +43,7 @@ SRC=src/se/chalmers/cs/gf/dialogutil/*.java \
     src/se/chalmers/cs/gf/dialogutil/sr/*.java \
     src/se/chalmers/cs/gf/dialogutil/tts/*.java
 
-.PHONY: clean distclean classes
+.PHONY: clean distclean classes javadoc
 
 default all: classes
 
@@ -50,6 +53,10 @@ classes:
 
 recognize:
 	$(JAVA) -cp $(CLASSPATH) se.chalmers.cs.gf.dialogutil.sr.Recognizer -oaa_connect "tcp('$(FAC_HOST)',3378)"
+
+javadoc:
+	mkdir -p doc
+	$(JAVADOC) -d doc $(SRC)
 
 clean:
 	-rm -rf build

@@ -7,6 +7,9 @@ import com.sri.oaa2.lib.*;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ *  Calls the Nuance speech recognizer using OAA.
+ */
 public class Recognizer {
 
         private LibOaa outOaa;
@@ -134,7 +137,9 @@ public class Recognizer {
                 return r;
         }
 
-
+        /**
+         *  The result of the text to speech recognizer.
+         */
         public static class Result {
                 private String text;
                 private int confidence;
