@@ -35,14 +35,6 @@ public class JavaSpeechOutput implements TextListener {
         private Synthesizer synthesizer;
 
         public JavaSpeechOutput() {
-                try {
-                        // FIXME: hack to check that FreeTTS is in the CLASSPATH
-                        Class.forName("com.sun.speech.freetts.jsapi.FreeTTSEngineCentral");
-                } catch (ClassNotFoundException ex) {
-                        System.err.println("ERROR: FreeTTS not found");
-                        System.exit(1);
-                }
-
                 // the default audio player, JavaStreamingAudioPlayer blocks and
                 // doesn't seem to output any sound under jdk 1.5.0 RC on linux
                 // (at least on my machine) / Bjorn Bringert 2004-09-27
@@ -114,12 +106,12 @@ public class JavaSpeechOutput implements TextListener {
          *  output or the thread has been interrupted.
          */
         public void blockingSpeakText(String text) {
+                System.err.println("JavaSpeechOutput: Speaking...");
                 synthesizer.speakPlainText(text, null);
                 try {
-                        System.err.println("waitEngineState(Synthesizer.QUEUE_EMPTY)");
                         synthesizer.waitEngineState(Synthesizer.QUEUE_EMPTY);
-                        System.err.println("waitEngineState done");
                 } catch (InterruptedException ex) { }
+                System.err.println("JavaSpeechOutput: done");
         }
 
         /**
