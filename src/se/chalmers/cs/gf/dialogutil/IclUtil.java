@@ -93,4 +93,12 @@ public class IclUtil {
                 return new IclList(l);
         }
 
+        /**
+         *  Gets the string value of an ICL string. 
+         *  @throws ClassCastException if the term is not a string.
+         */
+        public static String fromStr(IclTerm t) {
+                return ((IclStr)t).toUnquotedString();
+        }
+
 }
