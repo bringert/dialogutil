@@ -1,4 +1,4 @@
-package se.chalmers.se.gf.dialogutil;
+package se.chalmers.cs.gf.dialogutil;
 
 import java.util.EventListener;
 

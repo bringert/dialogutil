@@ -1,4 +1,4 @@
-package se.chalmers.se.gf.dialogutil.tts;
+package se.chalmers.cs.gf.dialogutil.tts;
 
 /**
  * Copyright 2004 Bjorn Bringert.
@@ -21,7 +21,7 @@ import javax.speech.synthesis.Synthesizer;
 import javax.speech.synthesis.SynthesizerModeDesc;
 import javax.speech.synthesis.Voice;
 
-import se.chalmers.se.gf.dialogutil.*;
+import se.chalmers.cs.gf.dialogutil.*;
 
 public class JavaSpeechOutput implements TextListener {
 

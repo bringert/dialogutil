@@ -1,4 +1,4 @@
-package se.chalmers.se.gf.dialogutil.sr;
+package se.chalmers.cs.gf.dialogutil.sr;
 
 import com.sri.oaa2.com.*;
 import com.sri.oaa2.icl.*;

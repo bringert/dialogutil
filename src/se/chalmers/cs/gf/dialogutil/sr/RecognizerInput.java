@@ -1,6 +1,6 @@
-package se.chalmers.se.gf.dialogutil.sr;
+package se.chalmers.cs.gf.dialogutil.sr;
 
-import se.chalmers.se.gf.dialogutil.*;
+import se.chalmers.cs.gf.dialogutil.*;
 
 import javax.swing.SwingUtilities;
 import javax.swing.event.EventListenerList;

@@ -14,9 +14,6 @@ JAVA  = java
 # path to the Java archive tool
 JAR   = jar
 
-# path to the gfc2java directory
-GFC2JAVA = ../gfc2java
-
 # path to a OAA installation
 OAA_HOME = ../oaa2.3.0
 
@@ -37,7 +34,7 @@ JAVACFLAGS=-Xlint:deprecation -Xlint:unchecked
 OAA_JARS = $(OAA_HOME)/lib/jar
 OAA_CP = $(OAA_JARS)/oaa2.jar:$(OAA_JARS)/antlr-oaa.jar:$(OAA_JARS)/concurrent-1.3.1.jar:$(OAA_JARS)/log4j-1.2.7.jar
 
-CLASSPATH=.:build:$(GFC2JAVA)/build:$(OAA_CP):$(JSAPI_CP):$(JSAPI_ENGINE_CP)
+CLASSPATH=.:build:$(OAA_CP):$(JSAPI_CP):$(JSAPI_ENGINE_CP)
 
 SRC=src/se/chalmers/cs/gf/dialogutil/*.java \
     src/se/chalmers/cs/gf/dialogutil/sr/*.java \
