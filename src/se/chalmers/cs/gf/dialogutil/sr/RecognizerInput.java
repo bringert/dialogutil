@@ -47,7 +47,7 @@ public class RecognizerInput implements TextInput {
                                         }
                                 }
                         } catch (IOException ex) {
-                                System.err.println("RecognixerInput: Error : " + ex);
+                                System.err.println("RecognizerInput: Error: " + ex);
                         }
                 }
         }
