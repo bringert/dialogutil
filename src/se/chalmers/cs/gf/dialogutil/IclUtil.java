@@ -21,9 +21,19 @@ public class IclUtil {
          *  or did not bind var.
          */
         public static IclTerm matchAndGetVar(IclTerm t1, IclTerm t2, String var) {
+                Map<String,IclTerm> vars = matchAndGetVars(t1, t2);
+                return vars == null ? null : vars.get(var);
+        }
+
+        /**
+         *  Unify two terms and get the values of all variable bound by the 
+         *  unifications.
+         *  @return A map of variable names to values, or null if the unification failed.
+         */
+        public static Map<String,IclTerm> matchAndGetVars(IclTerm t1, IclTerm t2) {
                 HashMap<String,IclTerm> vars = new HashMap<String,IclTerm>();
                 if (Unifier.getInstance().matchTerms(t1, t2, vars))
-                        return vars.get(var);
+                        return vars;
                 return null;
         }
 
