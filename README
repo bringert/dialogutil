@@ -1,0 +1,9 @@
+Some utilities for building dialog systems with Java and OAA.
+
+Requirements:
+
+- OOA 2.3.0 (http://www.ai.sri.com/oaa/distribution/v2.3/)
+
+Compile:
+
+$ make
