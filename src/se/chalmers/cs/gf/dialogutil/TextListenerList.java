@@ -26,6 +26,7 @@ public class TextListenerList {
                 if (listeners.size() == 0)
                         return;
 
+                // FIXME: this should not be the event source
                 TextEvent textEvent = new TextEvent(this, text);
                 TextListener[] ls = listeners.toArray(new TextListener[listeners.size()]);
                 for (int i = ls.length-1; i >= 0; i--)
