@@ -1,10 +1,7 @@
 package se.chalmers.cs.gf.dialogutil;
 
-import com.sri.oaa2.com.*;
 import com.sri.oaa2.icl.*;
-import com.sri.oaa2.lib.*;
 
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -12,6 +9,9 @@ import java.util.*;
  */
 public class IclUtil {
 
+        /**
+         *  Prevents instantiation.
+         */
         private IclUtil() {}
 
         /**
