@@ -9,4 +9,6 @@ public interface TextInput {
 
         public void removeTextListener(TextListener l);
 
+        public void setEnabled(boolean enabled);
+
 }

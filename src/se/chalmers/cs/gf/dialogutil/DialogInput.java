@@ -10,7 +10,7 @@ import javax.swing.event.*;
  */
 public class DialogInput extends JDialog implements TextInput {
         
-        protected EventListenerList listenerList = new EventListenerList();
+        protected TextListenerList listeners = new TextListenerList();
 
         private JTextField inputField;
 
@@ -35,29 +35,21 @@ public class DialogInput extends JDialog implements TextInput {
         }
 
         public void addTextListener(TextListener l) {
-                listenerList.add(TextListener.class, l);
+                listeners.add(l);
         }
 
         public void removeTextListener(TextListener l) {
-                listenerList.remove(TextListener.class, l);
+                listeners.remove(l);
         }
 
-        protected void fireTextInput(String text) {
-                TextEvent textEvent = null; 
-                Object[] listeners = listenerList.getListenerList();
-                for (int i = listeners.length-2; i>=0; i-=2) {
-                        if (listeners[i]==TextListener.class) {
-                                if (textEvent == null)
-                                        textEvent = new TextEvent(this, text);
-                                ((TextListener)listeners[i+1]).textEvent(textEvent);
-                        }
-                }
+        protected void fireTextEvent(String text) {
+                listeners.fireTextEvent(text);
         }
 
         private class DoneListener implements ActionListener {
                 public void actionPerformed(ActionEvent e) {
                         String inputString = inputField.getText();
-                        fireTextInput(inputString);
+                        fireTextEvent(inputString);
                 }
         }
 

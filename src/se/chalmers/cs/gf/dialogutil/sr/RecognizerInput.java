@@ -2,35 +2,39 @@ package se.chalmers.cs.gf.dialogutil.sr;
 
 import se.chalmers.cs.gf.dialogutil.*;
 
-import javax.swing.SwingUtilities;
-import javax.swing.event.EventListenerList;
-
 /**
  *  A text input source which gets input from a Recognizer.
  */
 public class RecognizerInput implements TextInput {
 
-        protected EventListenerList listenerList = new EventListenerList();
+        protected TextListenerList listeners = new TextListenerList();
 
         private Recognizer recog;
 
+        private boolean enabled;
+
         public RecognizerInput(Recognizer recog) {
                 this.recog = recog;
+                this.enabled = true;
                 new RecogThread(). start();
         }
         
         private class RecogThread extends Thread {
                 public void run() {
                         while (true) {
+                                
+                                synchronized (RecognizerInput.this) {
+                                        while (!enabled)
+                                                try {
+                                                        RecognizerInput.this.wait();
+                                                } catch (InterruptedException ex) {}
+                                }
+
+
                                 Recognizer.Result r = recog.recognize(".MAIN");
                                 if (r != null) {
                                         final String text = r.getText();
-                                        SwingUtilities.invokeLater(
-                                                new Runnable() {
-                                                        public void run() {  
-                                                                fireTextInput(text);
-                                                        }
-                                                });
+                                        fireTextEvent(text);
                                 }
                         }
                         
@@ -38,23 +42,22 @@ public class RecognizerInput implements TextInput {
         }
 
         public void addTextListener(TextListener l) {
-                listenerList.add(TextListener.class, l);
+                listeners.add(l);
         }
 
         public void removeTextListener(TextListener l) {
-                listenerList.remove(TextListener.class, l);
+                listeners.remove(l);
         }
 
-        protected void fireTextInput(String text) {
-                TextEvent textEvent = null; 
-                Object[] listeners = listenerList.getListenerList();
-                for (int i = listeners.length-2; i>=0; i-=2) {
-                        if (listeners[i]==TextListener.class) {
-                                if (textEvent == null)
-                                        textEvent = new TextEvent(this, text);
-                                ((TextListener)listeners[i+1]).textEvent(textEvent);
-                        }
-                }
+        protected void fireTextEvent(String text) {
+                listeners.fireTextEvent(text);
+        }
+
+        public synchronized void setEnabled(boolean enabled) {
+                System.err.println("RecognizerInput: " + (enabled ? "enabled" : "disabled"));
+
+                this.enabled = enabled;
+                notifyAll();
         }
 
 }
