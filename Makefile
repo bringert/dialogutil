@@ -56,6 +56,9 @@ classes:
 recognize:
 	$(JAVA) -cp $(CLASSPATH) se.chalmers.cs.gf.dialogutil.sr.Recognizer -oaa_connect "tcp('$(FAC_HOST)',3378)"
 
+nuance-speak:
+	$(JAVA) -cp $(CLASSPATH) se.chalmers.cs.gf.dialogutil.tts.NuanceWrapperSpeechOutput -oaa_connect "tcp('$(FAC_HOST)',3378)"
+
 javadoc:
 	mkdir -p doc/javadoc
 	$(JAVADOC) -d doc/javadoc $(SRC)
