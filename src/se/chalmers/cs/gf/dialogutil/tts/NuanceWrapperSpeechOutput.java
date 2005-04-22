@@ -1,13 +1,15 @@
 package se.chalmers.cs.gf.dialogutil.tts;
 
 import se.chalmers.cs.gf.dialogutil.*;
+import static se.chalmers.cs.gf.dialogutil.IclUtil.icl;
 
 import com.sri.oaa2.icl.*;
 
 import java.io.*;
+import java.util.List;
 
 /**
- *  Outputs text to FreeTTS using the Java Speech API.
+ *  Outputs text to Nuance using NuanceWrapper.
  */
 public class NuanceWrapperSpeechOutput implements TextListener {
 
@@ -20,11 +22,29 @@ public class NuanceWrapperSpeechOutput implements TextListener {
         public void speakText(String text) {
                 client.solve(new IclStruct("appendTTS", new IclStr(text)));
                 client.solve(new IclStruct("nscPlay", new IclStr("false")));
+                waitForEvent(icl("playbackStoppedEvent(Reason,Tones)"));
         }
 
         public void textEvent(TextEvent e) {
                 speakText(e.getText());
         }
+
+        private IclTerm waitForEvent (IclTerm wantedEvent) {
+                IclTerm getEventGoal = icl("nscGetEvent(Event)");
+                IclTerm wanted = new IclStruct("nscGetEvent", wantedEvent);
+
+                List<IclTerm> answers;
+                while (!((answers = client.solve(getEventGoal)).isEmpty())) {
+                        for (IclTerm ans : answers) {
+                                if (Unifier.getInstance().unify(ans, wanted) != null) {
+                                        return ((IclStruct)ans).getTerm(0);
+                                }
+                        }
+                }
+
+                return null;
+        }
+
 
         public static void main(String[] args) throws IOException {
                 OAAClient client = new OAAClient("main", args);
