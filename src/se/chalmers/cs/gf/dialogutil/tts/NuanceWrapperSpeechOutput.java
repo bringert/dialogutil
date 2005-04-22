@@ -20,8 +20,15 @@ public class NuanceWrapperSpeechOutput implements TextListener {
         }
 
         public void speakText(String text) {
-                client.solve(new IclStruct("appendTTS", new IclStr(text)));
-                client.solve(new IclStruct("nscPlay", new IclStr("false")));
+                IclTerm append = new IclStruct("nscAppendTTS", new IclStr(text));
+                if (client.solve(append).isEmpty()) {
+                        System.err.println(append + " failed");
+                }
+                IclTerm play = icl("nscPlay(false)");
+                if (client.solve(play).isEmpty()) {
+                        System.err.println(play + " failed");
+                }
+
                 waitForEvent(icl("playbackStoppedEvent(Reason,Tones)"));
         }
 
