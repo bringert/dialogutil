@@ -42,6 +42,7 @@ OAA_CP = $(OAA_JARS)/oaa2.jar:$(OAA_JARS)/antlr-oaa.jar:$(OAA_JARS)/concurrent-1
 CLASSPATH=.:build:$(OAA_CP):$(JSAPI_CP):$(JSAPI_ENGINE_CP)
 
 SRC=src/se/chalmers/cs/gf/dialogutil/*.java \
+    src/se/chalmers/cs/gf/dialogutil/gui/*.java \
     src/se/chalmers/cs/gf/dialogutil/sr/*.java \
     src/se/chalmers/cs/gf/dialogutil/tts/*.java
 
