@@ -7,12 +7,20 @@ public class DrawEvent extends EventObject {
 
         private Shape shape;
 
-        public DrawEvent(Object source, Shape shape) {
+        private long when;
+
+        public DrawEvent(Object source, Shape shape, long when) {
                 super(source);
                 this.shape = shape;
+                this.when = when;
         }
 
         public Shape getShape() {
                 return shape;
         }
+        
+        public long getWhen() {
+                return when;
+        }
+
 }

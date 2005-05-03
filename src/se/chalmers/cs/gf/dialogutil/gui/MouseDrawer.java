@@ -10,8 +10,6 @@ public class MouseDrawer {
 
         private EventListenerList listenerList = new EventListenerList();
 
-        private DrawEvent drawEvent;
-
         private GeneralPath path;
         
         public MouseDrawer(Component c) {
@@ -23,15 +21,15 @@ public class MouseDrawer {
         private class MouseDrawListener extends MouseInputAdapter {
                 public void mouseDragged(MouseEvent e) {
                         path.lineTo(e.getX(), e.getY());
-                        fireDrawStarted(e.getSource());
+                        fireDrawStarted(e.getSource(), e.getWhen());
                 }
                 public void mousePressed(MouseEvent e) {
                         path = new GeneralPath();
                         path.moveTo(e.getX(), e.getY());
-                        fireDrawUpdated(e.getSource());
+                        fireDrawUpdated(e.getSource(), e.getWhen());
                 }
                 public void mouseReleased(MouseEvent e) {
-                        fireDrawFinished(e.getSource());
+                        fireDrawFinished(e.getSource(), e.getWhen());
                 }
         }
 
@@ -44,39 +42,40 @@ public class MouseDrawer {
         }
 
 
-        protected void fireDrawStarted(Object source) {
+        protected void fireDrawStarted(Object source, long when) {
+                DrawEvent e = null;
                 Object[] listeners = listenerList.getListenerList();
                 for (int i = listeners.length-2; i>=0; i-=2) {
                         if (listeners[i]==DrawListener.class) {
-                                createDrawEvent(source);
-                                ((DrawListener)listeners[i+1]).drawStarted(drawEvent);
+                                if (e == null)
+                                        e = new DrawEvent(source, path, when);
+                                ((DrawListener)listeners[i+1]).drawStarted(e);
                         }
                 }
         }
 
-        protected void fireDrawUpdated(Object source) {
+        protected void fireDrawUpdated(Object source, long when) {
+                DrawEvent e = null;
                 Object[] listeners = listenerList.getListenerList();
                 for (int i = listeners.length-2; i>=0; i-=2) {
                         if (listeners[i]==DrawListener.class) {
-                                createDrawEvent(source);
-                                ((DrawListener)listeners[i+1]).drawUpdated(drawEvent);
+                                if (e == null)
+                                        e = new DrawEvent(source, path, when);
+                                ((DrawListener)listeners[i+1]).drawUpdated(e);
                         }
                 }
         }
 
-        protected void fireDrawFinished(Object source) {
+        protected void fireDrawFinished(Object source, long when) {
+                DrawEvent e = null;
                 Object[] listeners = listenerList.getListenerList();
                 for (int i = listeners.length-2; i>=0; i-=2) {
                         if (listeners[i]==DrawListener.class) {
-                                createDrawEvent(source);
-                                ((DrawListener)listeners[i+1]).drawFinished(drawEvent);
+                                if (e == null)
+                                        e = new DrawEvent(source, path, when);
+                                ((DrawListener)listeners[i+1]).drawFinished(e);
                         }
                 }
-        }
-
-        private void createDrawEvent(Object source) {
-                if (drawEvent == null || drawEvent.getShape() != path)
-                        drawEvent = new DrawEvent(source, path);
         }
 
 }
