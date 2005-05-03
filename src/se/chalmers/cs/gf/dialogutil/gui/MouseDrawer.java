@@ -29,6 +29,7 @@ public class MouseDrawer {
                         fireDrawUpdated(e.getSource(), e.getWhen());
                 }
                 public void mouseReleased(MouseEvent e) {
+                        path.lineTo(e.getX(), e.getY());
                         fireDrawFinished(e.getSource(), e.getWhen());
                 }
         }
