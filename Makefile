@@ -46,9 +46,15 @@ SRC=src/se/chalmers/cs/gf/dialogutil/*.java \
     src/se/chalmers/cs/gf/dialogutil/sr/*.java \
     src/se/chalmers/cs/gf/dialogutil/tts/*.java
 
+DIST_NAME=dialogutil-`date '+%Y%m%d'`
+DIST_FILE=$(DIST_NAME).tar.gz
+
 .PHONY: clean distclean classes javadoc
 
-default all: classes
+default all: jar
+
+jar: classes
+	cd build; $(JAR) -cf ../dialogutil.jar *
 
 classes:
 	mkdir -p build
@@ -63,6 +69,17 @@ nuance-speak:
 javadoc:
 	mkdir -p doc/javadoc
 	$(JAVADOC) -d doc/javadoc $(SRC)
+
+dist:
+	darcs dist --dist-name=$(DIST_NAME)
+
+upload: jar dist
+	scp dialogutil.jar cs:.public_html/gf/downloads/dialogutil/jar/
+	scp $(DIST_FILE) cs:.public_html/gf/downloads/dialogutil/
+
+upload-doc: javadoc
+	scp doc/dialogutil.html cs:.public_html/gf/
+	scp -pr doc/javadoc/* cs:.public_html/gf/javadoc/dialogutil
 
 clean:
 	-rm -rf build
