@@ -70,7 +70,7 @@ public class NuanceVolumeControl extends JPanel {
         }
 
         public static void main(String[] args) throws IOException {
-                OAAClient client = new OAAClient("volume", args);
+                OAAClient client = new OAAClient("VolumeAgent", args);
                 NuanceVolumeControl c = new NuanceVolumeControl(client);
                 JFrame f = new JFrame("Nuance Volume");
                 f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
