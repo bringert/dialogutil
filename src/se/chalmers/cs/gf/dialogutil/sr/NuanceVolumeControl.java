@@ -5,6 +5,7 @@ import com.sri.oaa2.icl.*;
 import com.sri.oaa2.lib.*;
 
 import se.chalmers.cs.gf.dialogutil.OAAClient;
+import se.chalmers.cs.gf.dialogutil.IclUtil;
 
 import java.io.IOException;
 import java.util.*;
@@ -18,14 +19,40 @@ public class NuanceVolumeControl extends JPanel {
 
         private OAAClient client;
 
+        private JSlider slider;
+
         public NuanceVolumeControl(OAAClient client) {
                 this.client = client;
-                JSlider slider = new JSlider(JSlider.VERTICAL, 0, 255);
+                slider = new JSlider(JSlider.VERTICAL);
+                slider.setMinimum(0);
+                slider.setMaximum(255);
                 slider.addChangeListener(new SliderListener());
                 add(slider);
         }
 
-        private void setVolume(int vol) {
+        private void updateVolume() {
+                try {
+                        slider.setValue(getNuanceVolume());
+                } catch (IOException ex) {
+                        System.err.println(ex.getMessage());
+                }
+        }
+
+        private int getNuanceVolume() throws IOException {
+                IclTerm t = new IclStruct("nscGetParameter",
+                                          new IclStr("audio.InputVolume"), 
+                                          new IclVar("Vol"));
+                List<IclTerm> as = client.solve(t);
+                if (as.size() != 1) {
+                        throw new IOException(t + " returned " 
+                                              + as.size() + " results.");
+                }
+                
+                IclTerm vol = IclUtil.matchAndGetVar(t, as.get(0), "Vol");
+                return ((IclInt)vol).toInt();
+        }
+
+        private void setNuanceVolume(int vol) {
                 IclTerm t = new IclStruct("nscSetParameter",
                                           new IclStr("audio.InputVolume"), 
                                           new IclInt(vol));
@@ -34,10 +61,10 @@ public class NuanceVolumeControl extends JPanel {
 
         private class SliderListener implements ChangeListener {
                 public void stateChanged(ChangeEvent e) {
-                        JSlider source = (JSlider)e.getSource();
-                        if (!source.getValueIsAdjusting()) {
-                                int vol = source.getValue();
-                                setVolume(vol);
+                        if (!slider.getValueIsAdjusting()) {
+                                int vol = slider.getValue();
+                                setNuanceVolume(vol);
+                                updateVolume();
                         }
                 }
         }
@@ -50,6 +77,7 @@ public class NuanceVolumeControl extends JPanel {
                 f.setContentPane(c);
                 f.pack();
                 f.setVisible(true);
+                c.updateVolume();
         }
 
 }
