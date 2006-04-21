@@ -23,7 +23,7 @@ FAC_HOST = $(HOSTNAME)
 # path to the base of a FreeTTS install 
 # (only used to define JSAPI_CP and
 # JSAPI_ENGINE_CP)
-FREETTS=../freetts-1.2
+FREETTS=$(HOME)/lib/freetts-1.2
 
 # path to Java Speech API classes
 JSAPI_CP=$(FREETTS)/lib/jsapi.jar
